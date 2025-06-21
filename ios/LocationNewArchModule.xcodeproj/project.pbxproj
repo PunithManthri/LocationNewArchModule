@@ -7,33 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0C80B921A6F3F58F76C31292 /* libPods-LocationNewArchModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-LocationNewArchModule.a */; };
-		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		0CB2196B5CF8BEBAA7CC7624 /* libPods-LocationNewArchModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC327179DC01A58A2A43BA76 /* libPods-LocationNewArchModule.a */; };
+		18E0BE2D2E03E3C300FC44BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E0BE252E03E3C300FC44BE /* AppDelegate.swift */; };
+		18E0BE2F2E03E3C300FC44BE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 18E0BE2A2E03E3C300FC44BE /* PrivacyInfo.xcprivacy */; };
+		18E0BE302E03E3C300FC44BE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18E0BE282E03E3C300FC44BE /* LaunchScreen.storyboard */; };
+		18E0BE312E03E3C300FC44BE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18E0BE262E03E3C300FC44BE /* Images.xcassets */; };
+		18E57AC12E05599A00689E96 /* LocationModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E57AC02E05599A00689E96 /* LocationModule.swift */; };
+		18E57AC62E056DD000689E96 /* LocationModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E57AC52E056DD000689E96 /* LocationModule.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		00E356F41AD99517003FC87E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = LocationNewArchModule;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* LocationNewArchModule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationNewArchModule.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LocationNewArchModule/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = LocationNewArchModule/Info.plist; sourceTree = "<group>"; };
-		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = LocationNewArchModule/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		3B4392A12AC88292D35C810B /* Pods-LocationNewArchModule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LocationNewArchModule.debug.xcconfig"; path = "Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-LocationNewArchModule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LocationNewArchModule.release.xcconfig"; path = "Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule.release.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-LocationNewArchModule.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LocationNewArchModule.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = LocationNewArchModule/AppDelegate.swift; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = LocationNewArchModule/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1532F9ABEF517D9BA66BB3A8 /* Pods-LocationNewArchModule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LocationNewArchModule.debug.xcconfig"; path = "Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule.debug.xcconfig"; sourceTree = "<group>"; };
+		18E0BE252E03E3C300FC44BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		18E0BE262E03E3C300FC44BE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		18E0BE282E03E3C300FC44BE /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		18E0BE2A2E03E3C300FC44BE /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		18E0BE322E03E9F700FC44BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18E57AC02E05599A00689E96 /* LocationModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModule.swift; sourceTree = "<group>"; };
+		18E57AC42E0559C500689E96 /* LocationNewArchModule-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LocationNewArchModule-Bridging-Header.h"; sourceTree = "<group>"; };
+		18E57AC52E056DD000689E96 /* LocationModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationModule.m; sourceTree = "<group>"; };
+		AC327179DC01A58A2A43BA76 /* libPods-LocationNewArchModule.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LocationNewArchModule.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B34697D62E6FDB24EBCCD2A6 /* Pods-LocationNewArchModule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LocationNewArchModule.release.xcconfig"; path = "Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -42,38 +37,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-LocationNewArchModule.a in Frameworks */,
+				0CB2196B5CF8BEBAA7CC7624 /* libPods-LocationNewArchModule.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356F01AD99517003FC87E /* Supporting Files */ = {
+		18E0BE2B2E03E3C300FC44BE /* LocationNewArchModule */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F11AD99517003FC87E /* Info.plist */,
+				18E0BE322E03E9F700FC44BE /* Info.plist */,
+				18E0BE252E03E3C300FC44BE /* AppDelegate.swift */,
+				18E0BE262E03E3C300FC44BE /* Images.xcassets */,
+				18E0BE282E03E3C300FC44BE /* LaunchScreen.storyboard */,
+				18E0BE2A2E03E3C300FC44BE /* PrivacyInfo.xcprivacy */,
 			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		13B07FAE1A68108700A75B9A /* LocationNewArchModule */ = {
-			isa = PBXGroup;
-			children = (
-				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				761780EC2CA45674006654EE /* AppDelegate.swift */,
-				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
-				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
-			);
-			name = LocationNewArchModule;
+			path = LocationNewArchModule;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-LocationNewArchModule.a */,
+				AC327179DC01A58A2A43BA76 /* libPods-LocationNewArchModule.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -88,7 +75,10 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* LocationNewArchModule */,
+				18E57AC52E056DD000689E96 /* LocationModule.m */,
+				18E57AC42E0559C500689E96 /* LocationNewArchModule-Bridging-Header.h */,
+				18E57AC02E05599A00689E96 /* LocationModule.swift */,
+				18E0BE2B2E03E3C300FC44BE /* LocationNewArchModule */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
@@ -110,8 +100,8 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-LocationNewArchModule.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-LocationNewArchModule.release.xcconfig */,
+				1532F9ABEF517D9BA66BB3A8 /* Pods-LocationNewArchModule.debug.xcconfig */,
+				B34697D62E6FDB24EBCCD2A6 /* Pods-LocationNewArchModule.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -123,13 +113,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "LocationNewArchModule" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				FAA9BC1D3A69671993119110 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				09DDF93C33CE7E9D1850F7E0 /* [CP] Embed Pods Frameworks */,
+				A672A27AE64E6211C34220B0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -149,7 +139,7 @@
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1620;
 					};
 				};
 			};
@@ -172,19 +162,13 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		00E356EC1AD99517003FC87E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				18E0BE2F2E03E3C300FC44BE /* PrivacyInfo.xcprivacy in Resources */,
+				18E0BE302E03E3C300FC44BE /* LaunchScreen.storyboard in Resources */,
+				18E0BE312E03E3C300FC44BE /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,7 +177,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -203,11 +187,11 @@
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
+		09DDF93C33CE7E9D1850F7E0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -224,7 +208,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		A672A27AE64E6211C34220B0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FAA9BC1D3A69671993119110 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -246,23 +247,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LocationNewArchModule/Pods-LocationNewArchModule-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -270,31 +254,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+				18E57AC62E056DD000689E96 /* LocationModule.m in Sources */,
+				18E57AC12E05599A00689E96 /* LocationModule.swift in Sources */,
+				18E0BE2D2E03E3C300FC44BE /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* LocationNewArchModule */;
-			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-LocationNewArchModule.debug.xcconfig */;
+			baseConfigurationReference = 1532F9ABEF517D9BA66BB3A8 /* Pods-LocationNewArchModule.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"\"  $(inherited)\"/**",
+					"\"  $(PROJECT_DIR)/../node_modules/react-native/React\"/**",
+					"\" $(PROJECT_DIR)/../node_modules/react-native/ReactCommon\"/**",
+					"\" $(PROJECT_DIR)/Pods/Headers/Public\"/**",
+					"\"$(PROJECT_DIR)/Pods/Headers/Public/React\"/**",
+					"\"$(SRCROOT)/../node_modules/react-native/React\"/**",
+					"\"$(SRCROOT)/../node_modules/react-native/React/CoreModules\"/**",
+					"\"$(SRCROOT)/../node_modules/react-native/React/Base\"/**",
+					"\"  $(SRCROOT)/build/generated/ios/LocationModule\"/**",
+				);
 				INFOPLIST_FILE = LocationNewArchModule/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -307,6 +296,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = LocationNewArchModule;
+				"SWIFT_INCLUDE_PATHS[arch=*]" = "\"  $(PROJECT_DIR)/Pods/Headers/Public/React\"/**";
+				SWIFT_OBJC_BRIDGING_HEADER = "LocationNewArchModule-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -315,13 +306,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-LocationNewArchModule.release.xcconfig */;
+			baseConfigurationReference = B34697D62E6FDB24EBCCD2A6 /* Pods-LocationNewArchModule.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = LocationNewArchModule/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -334,6 +325,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = LocationNewArchModule;
+				"SWIFT_INCLUDE_PATHS[arch=*]" = "\"  $(PROJECT_DIR)/Pods/Headers/Public/React\"/**";
+				SWIFT_OBJC_BRIDGING_HEADER = "LocationNewArchModule-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -370,9 +363,14 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
+					"\"  $(inherited)\"/**",
+					"\"  $(PROJECT_DIR)/Pods/Headers/Public/React\"/**",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -388,6 +386,18 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"$(SRCROOT)/Pods/Headers/Public/RCTDeprecation/**",
+					"$(inherited)/**",
+					"$(PROJECT_DIR)/../node_modules/react-native/React/**",
+					"$(PROJECT_DIR)/../node_modules/react-native/ReactCommon/**",
+					"$(PROJECT_DIR)/Pods/Headers/Public/**",
+					"$(PROJECT_DIR)/Pods/Headers/Public/React/**",
+					"$(SRCROOT)/../build/generated/ios/LocationModule/**",
+					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native/React/CoreModules/**",
+					"$(SRCROOT)/../node_modules/react-native/React/Base/**",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
@@ -408,7 +418,17 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "$(inherited) DEBUG RCT_ENABLE_INSPECTOR=1";
+				"SWIFT_INCLUDE_PATHS[arch=*]" = "\"  $(PROJECT_DIR)/Pods/Headers/Public/React\"";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "$(PROJECT_DIR)/ios/LocationNewArchModule-Bridging-Header.h";
+				USE_HERMES = true;
 			};
 			name = Debug;
 		};
@@ -443,9 +463,14 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
+					"\"  $(inherited)\"",
+					"\"  $(PROJECT_DIR)/Pods/Headers/Public/React\"",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -454,6 +479,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"\"  $(inherited)\"/**",
+					"\"  $(PROJECT_DIR)/../node_modules/react-native/React\"/**",
+					"\"  $(PROJECT_DIR)/../node_modules/react-native/ReactCommon\"/**",
+					"\"  $(PROJECT_DIR)/Pods/Headers/Public\"/**",
+					"\"  $(PROJECT_DIR)/Pods/Headers/Public/React\"/**",
+					"\"   $(SRCROOT)/build/generated/ios/LocationModule\"/**",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
@@ -473,7 +506,16 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "RCT_ENABLE_INSPECTOR=1";
+				"SWIFT_INCLUDE_PATHS[arch=*]" = "\"  $(PROJECT_DIR)/Pods/Headers/Public/React\"";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "$(PROJECT_DIR)/ios/LocationNewArchModule-Bridging-Header.h";
+				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

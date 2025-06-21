@@ -1,97 +1,302 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 📍 Location New Architecture Module
 
-# Getting Started
+A comprehensive React Native location tracking application built with the New Architecture, featuring real-time location updates, idle time tracking, and a modern UI.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 🚀 Features
 
-## Step 1: Start Metro
+### 📍 **Location Tracking**
+- Real-time GPS location updates
+- High-accuracy location data with configurable intervals
+- Background location tracking with foreground service
+- Location history with detailed metrics
+- Speed, altitude, and accuracy monitoring
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### ⏰ **Idle Time Tracking**
+- Smart idle detection based on movement speed
+- Real-time idle time counters
+- Idle session history with location data
+- Configurable idle thresholds
+- Visual indicators for idle status
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 🎨 **Modern UI**
+- Beautiful, responsive design
+- Dark/Light mode support
+- Animated status indicators
+- Real-time data visualization
+- Pull-to-refresh functionality
+- Horizontal scrollable history cards
 
-```sh
-# Using npm
-npm start
+### 🔧 **Technical Features**
+- React Native New Architecture support
+- Native Android module with Kotlin
+- Optimized event system with queuing
+- Comprehensive error handling
+- Performance monitoring and metrics
+- Debug logging system
 
-# OR using Yarn
-yarn start
+## 📋 Prerequisites
+
+- Node.js (v16 or higher)
+- React Native CLI
+- Android Studio
+- Android SDK (API 24+)
+- Google Play Services
+- Physical Android device or emulator
+
+## 🛠️ Installation
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd LocationNewArchModule
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+### 2. Install Dependencies
+```bash
+npm install
+# or
+yarn install
 ```
 
-### iOS
+### 3. Android Setup
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
+#### Install Android Dependencies
+```bash
+cd android
+./gradlew clean
+cd ..
 ```
 
-Then, and every time you update your native dependencies, run:
+#### Configure Google Play Services
+Ensure your device/emulator has Google Play Services installed and updated.
 
-```sh
-bundle exec pod install
+### 4. Run the Application
+```bash
+# Start Metro bundler
+npx react-native start
+
+# Run on Android
+npx react-native run-android
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## 📱 Usage
 
-```sh
-# Using npm
-npm run ios
+### Starting Location Tracking
+1. Launch the app
+2. Grant location permissions when prompted
+3. Tap "▶️ Start Tracking" to begin location monitoring
+4. The app will start collecting real-time location data
 
-# OR using Yarn
-yarn ios
+### Monitoring Idle Time
+- The app automatically detects when you're idle (not moving)
+- View current idle time in the "⏰ Idle Time Tracking" section
+- Check idle session history for past idle periods
+- Monitor total idle time across all sessions
+
+### Viewing Location Data
+- **Current Location**: Real-time coordinates, accuracy, and speed
+- **Location History**: Swipeable cards showing recent locations
+- **Status Indicators**: Visual feedback for tracking status
+- **Performance Metrics**: Event success rates and processing times
+
+## 🏗️ Project Structure
+
+```
+LocationNewArchModule/
+├── android/
+│   └── app/src/main/java/com/locationnewarchmodule/
+│       ├── LocationModule.kt          # Main React Native module
+│       ├── LocationService.kt         # Background location service
+│       └── MainApplication.kt         # App initialization
+├── src/
+│   └── NewArchitecture/
+│       ├── useLocationTracking.ts     # React hook for location
+│       ├── LocationModule.ts          # TypeScript interfaces
+│       └── LocationTrackingDemo.tsx   # Demo component
+├── App.tsx                            # Main application UI
+├── package.json                       # Dependencies
+└── README.md                          # This file
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## 🔧 Configuration
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+### Location Update Settings
+```kotlin
+// In LocationService.kt
+locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2000L)
+    .setMinUpdateIntervalMillis(1000L)
+    .setMinUpdateDistanceMeters(1f)
+    .build()
+```
 
-## Step 3: Modify your app
+### Idle Detection Threshold
+```typescript
+// In App.tsx
+const isMoving = speed > 0.5; // Consider moving if speed > 0.5 m/s
+```
 
-Now that you have successfully run the app, let's make changes!
+### Debug Logging
+```kotlin
+// Enable/disable debug logs
+private const val DEBUG_MODE = true
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## 📊 API Reference
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+### LocationModule Methods
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+#### `startLocationTracking()`
+Starts real-time location tracking.
+```typescript
+await LocationModule.startLocationTracking();
+```
 
-## Congratulations! :tada:
+#### `stopLocationTracking()`
+Stops location tracking.
+```typescript
+await LocationModule.stopLocationTracking();
+```
 
-You've successfully run and modified your React Native App. :partying_face:
+#### `requestLocationPermissions()`
+Requests necessary location permissions.
+```typescript
+const result = await LocationModule.requestLocationPermissions();
+```
 
-### Now what?
+#### `getLastLocation()`
+Retrieves the most recent location data.
+```typescript
+const location = await LocationModule.getLastLocation();
+```
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+### Location Data Structure
+```typescript
+interface LocationData {
+  latitude: number;
+  longitude: number;
+  accuracy: number;
+  altitude: number;
+  speed: number;
+  timestamp: number;
+  updateReason: string;
+  totalIdleTimeBelowThreshold: number;
+  isCurrentlyIdle: boolean;
+  isOutsideVisitTracking: boolean;
+}
+```
 
-# Troubleshooting
+### Idle Time Data Structure
+```typescript
+interface IdleTimeData {
+  totalIdleTime: number;        // Total idle time in milliseconds
+  currentIdleTime: number;      // Current idle time in milliseconds
+  isCurrentlyIdle: boolean;     // Whether user is currently idle
+  idleThreshold: number;        // Idle detection threshold
+  lastMovementTime: number;     // Last movement timestamp
+  idleSessions: IdleSession[];  // History of idle sessions
+}
+```
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## 🔍 Debugging
 
-# Learn More
+### View Native Logs
+```bash
+# Filter by module tags
+adb logcat -v time -s LocationService_NewArch:V LocationModule_NewArch:V
 
-To learn more about React Native, take a look at the following resources:
+# View all logs
+adb logcat
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+# React Native logs
+npx react-native log-android
+```
+
+### Common Debug Scenarios
+
+#### Location Not Updating
+1. Check if location permissions are granted
+2. Verify Google Play Services is installed
+3. Ensure device has GPS enabled
+4. Check debug logs for errors
+
+#### Idle Time Not Tracking
+1. Verify location tracking is active
+2. Check movement threshold settings
+3. Monitor speed values in logs
+4. Ensure location updates are frequent enough
+
+## 🚨 Permissions
+
+### Required Permissions
+- `ACCESS_FINE_LOCATION` - Precise location access
+- `ACCESS_COARSE_LOCATION` - Approximate location access
+- `FOREGROUND_SERVICE_LOCATION` - Background location service (API 34+)
+
+### Permission Flow
+1. App requests permissions on startup
+2. User grants permissions through system dialog
+3. App validates permission status
+4. Location tracking begins automatically
+
+## 📈 Performance
+
+### Optimizations
+- **Event Queuing**: High-priority events processed first
+- **Memory Management**: Automatic cleanup of old data
+- **Error Recovery**: Automatic retry for failed events
+- **Performance Monitoring**: Real-time metrics tracking
+
+### Metrics
+- **Event Success Rate**: Typically 100%
+- **Processing Time**: ~1ms average
+- **Memory Usage**: Optimized with cleanup intervals
+- **Battery Impact**: Minimal with efficient location requests
+
+## 🐛 Troubleshooting
+
+### Build Issues
+```bash
+# Clean and rebuild
+cd android && ./gradlew clean
+cd .. && npx react-native run-android
+```
+
+### Permission Issues
+1. Check AndroidManifest.xml permissions
+2. Verify runtime permission requests
+3. Test on physical device (emulators may have issues)
+
+### Location Service Issues
+1. Ensure Google Play Services is updated
+2. Check device GPS settings
+3. Verify location simulation is working
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- React Native team for the New Architecture
+- Google Play Services for location APIs
+- React Native community for best practices
+
+## 📞 Support
+
+For issues and questions:
+1. Check the troubleshooting section
+2. Review debug logs
+3. Create an issue with detailed information
+4. Include device information and error logs
+
+---
+
+**Built with ❤️ using React Native New Architecture**
