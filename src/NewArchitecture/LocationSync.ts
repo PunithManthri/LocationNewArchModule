@@ -1,5 +1,3 @@
-import { Alert } from "react-native";
-
 export async function sendLocationToServer(
   lat: number,
   lon: number,
@@ -24,7 +22,7 @@ export async function sendLocationToServer(
 
     if (lat && lon && timestamp) {
       const requestBody = {
-        userId: "June_16_Punith_android",
+        userId: "June_19_PUNITH",
         latitude: lat,
         longitude: lon,
         timestamp: timestamp,
@@ -53,13 +51,6 @@ export async function sendLocationToServer(
       const responseData = await response.json();
       console.log("[API] Location sync successful:", responseData);
 
-      // Only show alert in development
-      if (__DEV__) {
-        Alert.alert(
-          "Location Sync",
-          `Location synced successfully: ${JSON.stringify(responseData)}`
-        );
-      }
 
       return responseData;
     } else {
@@ -70,10 +61,10 @@ export async function sendLocationToServer(
     
     // Only show alert in development
     if (__DEV__) {
-      Alert.alert(
-        "Location Sync Error",
-        `Failed to sync location: ${error?.message || "Unknown error"}`
-      );
+      // Alert.alert(
+      //   "Location Sync Error",
+      //   `Failed to sync location: ${error?.message || "Unknown error"}`
+      // );
     }
     
     // Re-throw to let caller handle the error

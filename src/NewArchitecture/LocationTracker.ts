@@ -13,6 +13,10 @@ import LocationModule from "./LocationModule";
 
 const { LocationModule: NativeLocationModule } = NativeModules;
 
+// Platform-specific constants
+const IS_IOS = Platform.OS === 'ios';
+const IS_ANDROID = Platform.OS === 'android';
+
 // Constants
 const BACKGROUND_LOCATIONS_KEY = "background_locations";
 const LAST_LOCATION_KEY = "last_location";
@@ -155,7 +159,7 @@ class LocationTracker {
   } as const;
 
   constructor() {
-    console.log("[DEBUG] 🔧 Initializing LocationTracker...");
+    console.log("[DEBUG] 🔧 Initializing LocationTracker for", Platform.OS);
     
     if (!NativeLocationModule) {
       console.error("[DEBUG] ❌ LocationModule is not available!");
@@ -163,23 +167,23 @@ class LocationTracker {
     }
 
     this.eventEmitter = new NativeEventEmitter(NativeLocationModule);
-    console.log("[DEBUG] ✅ Event emitter created");
+    console.log("[DEBUG] ✅ Event emitter created for", Platform.OS);
 
     this.setupNetworkListener();
     this.setupAppStateListener();
     this.setupEventEmitterListeners();
     
-    console.log("[DEBUG] ✅ LocationTracker initialization complete");
+    console.log("[DEBUG] ✅ LocationTracker initialization complete for", Platform.OS);
   }
 
   private setupEventEmitterListeners(): void {
-    console.log("[DEBUG] 📡 Setting up event emitter listeners...");
+    console.log("[DEBUG] 📡 Setting up event emitter listeners for", Platform.OS);
 
     // Location update listener
     this.locationSubscription = this.eventEmitter.addListener(
       LocationTracker.EVENT_NAMES.LOCATION_UPDATE,
       (locationData: NativeLocation) => {
-        console.log("[DEBUG] 📍 LOCATION UPDATE RECEIVED from native:", locationData);
+        console.log("[DEBUG] 📍 LOCATION UPDATE RECEIVED from native (", Platform.OS, "):", locationData);
         
         try {
           const locationUpdate = convertToLocationUpdate(locationData);
@@ -190,6 +194,7 @@ class LocationTracker {
             longitude: locationUpdate.longitude,
             timestamp: locationUpdate.timestamp,
             updateReason: locationUpdate.updateReason,
+            platform: Platform.OS,
           });
           
           // Process the location update
@@ -218,7 +223,7 @@ class LocationTracker {
     this.errorSubscription = this.eventEmitter.addListener(
       LocationTracker.EVENT_NAMES.LOCATION_ERROR,
       (errorData: any) => {
-        console.error("[DEBUG] ❌ LOCATION ERROR RECEIVED from native:", errorData);
+        console.error("[DEBUG] ❌ LOCATION ERROR RECEIVED from native (", Platform.OS, "):", errorData);
         Alert.alert("Location Error", `Location tracking error: ${errorData?.error || "Unknown error"}`);
       }
     );
@@ -227,16 +232,16 @@ class LocationTracker {
     this.permissionSubscription = this.eventEmitter.addListener(
       LocationTracker.EVENT_NAMES.PERMISSION_CHANGED,
       (permissionData: any) => {
-        console.log("[DEBUG] 🔐 PERMISSION CHANGE RECEIVED from native:", permissionData);
+        console.log("[DEBUG] 🔐 PERMISSION CHANGE RECEIVED from native (", Platform.OS, "):", permissionData);
       }
     );
 
-    console.log("[DEBUG] ✅ Event emitter listeners set up successfully");
+    console.log("[DEBUG] ✅ Event emitter listeners set up successfully for", Platform.OS);
   }
 
   private async processLocationUpdate(location: LocationUpdate): Promise<void> {
     try {
-      console.log("[Tracker] Processing location update:", {
+      console.log("[Tracker] Processing location update (", Platform.OS, "):", {
         latitude: location.latitude,
         longitude: location.longitude,
         timestamp: location.timestamp,
@@ -277,7 +282,7 @@ class LocationTracker {
 
   private async handleIdleTimeData(location: LocationUpdate): Promise<void> {
     try {
-      console.log("[Idle] Handling idle time data:", {
+      console.log("[Idle] Handling idle time data (", Platform.OS, "):", {
         totalIdleTime: location.totalIdleTimeBelowThreshold,
         isCurrentlyIdle: location.isCurrentlyIdle,
         outsideVisitIdleTime: location.outsideVist_Total_IdleTime,
@@ -308,7 +313,7 @@ class LocationTracker {
       const isConnected = (state.isConnected && state.isInternetReachable) ?? false;
       
       if (this.lastNetworkState !== isConnected) {
-        console.log("[Tracker] Network state changed:", {
+        console.log("[Tracker] Network state changed (", Platform.OS, "):", {
           from: this.lastNetworkState,
           to: isConnected,
         });
@@ -325,7 +330,7 @@ class LocationTracker {
 
   private setupAppStateListener() {
     this.appStateSubscription = AppState.addEventListener("change", (nextAppState) => {
-      console.log("[Tracker] App state changed:", nextAppState);
+      console.log("[Tracker] App state changed (", Platform.OS, "):", nextAppState);
       
       if (nextAppState === "active") {
         // App came to foreground, sync any pending locations
@@ -359,7 +364,7 @@ class LocationTracker {
 
   async startTracking(callback: (location: LocationUpdate) => void): Promise<boolean> {
     try {
-      console.log("[DEBUG] 🚀 Starting location tracking...");
+      console.log("[DEBUG] 🚀 Starting location tracking on", Platform.OS);
       console.log("[DEBUG] 📱 NativeLocationModule available:", !!NativeLocationModule);
       console.log("[DEBUG] 📱 NativeLocationModule methods:", Object.keys(NativeLocationModule));
 
@@ -389,7 +394,7 @@ class LocationTracker {
 
       if (result?.status === "success") {
         this.isTracking = true;
-        console.log("[DEBUG] ✅ Location tracking started successfully");
+        console.log("[DEBUG] ✅ Location tracking started successfully on", Platform.OS);
         return true;
       } else {
         console.error("[DEBUG] ❌ Failed to start location tracking:", result);
@@ -403,7 +408,7 @@ class LocationTracker {
 
   async stopTracking(): Promise<void> {
     try {
-      console.log("[DEBUG] 🛑 Stopping location tracking...");
+      console.log("[DEBUG] 🛑 Stopping location tracking on", Platform.OS);
 
       if (!this.isTracking) {
         console.log("[DEBUG] ⚠️ Not tracking, skipping stop");
@@ -416,7 +421,7 @@ class LocationTracker {
       this.isTracking = false;
       this.onLocationUpdate = null;
       
-      console.log("[DEBUG] ✅ Location tracking stopped successfully");
+      console.log("[DEBUG] ✅ Location tracking stopped successfully on", Platform.OS);
     } catch (error) {
       console.error("[DEBUG] ❌ Error stopping location tracking:", error);
     }
@@ -424,16 +429,16 @@ class LocationTracker {
 
   async requestLocationPermissions(): Promise<boolean> {
     try {
-      console.log("[DEBUG] 🔐 Requesting location permissions...");
+      console.log("[DEBUG] 🔐 Requesting location permissions on", Platform.OS);
 
       const result = await NativeLocationModule.requestLocationPermissions();
       console.log("[DEBUG] 🔐 Permission request result:", result);
 
       if (result?.status === "granted") {
-        console.log("[DEBUG] ✅ Location permissions granted");
+        console.log("[DEBUG] ✅ Location permissions granted on", Platform.OS);
         return true;
       } else {
-        console.error("[DEBUG] ❌ Location permissions denied:", result);
+        console.error("[DEBUG] ❌ Location permissions denied on", Platform.OS, ":", result);
         return false;
       }
     } catch (error) {
@@ -470,6 +475,7 @@ class LocationTracker {
         longitude,
         timestamp: time.toISOString(),
         totalStored: locations.length,
+        platform: Platform.OS,
       });
     } catch (error) {
       console.error("[Background] Failed to store location:", error);
@@ -479,7 +485,7 @@ class LocationTracker {
 
   async syncBackgroundLocations(): Promise<void> {
     try {
-      console.log("[Background] Starting background location sync (background-only mode)...");
+      console.log("[Background] Starting background location sync (background-only mode) on", Platform.OS);
       const isOnline = await this.checkInternetConnection();
       if (!isOnline) {
         console.log("[Background] No internet connection, skipping sync");
@@ -494,7 +500,7 @@ class LocationTracker {
         return;
       }
 
-      console.log("[Background] Starting sync of", locations.length, "locations (background-only mode)");
+      console.log("[Background] Starting sync of", locations.length, "locations (background-only mode) on", Platform.OS);
 
       let successCount = 0;
       let failureCount = 0;
@@ -536,7 +542,7 @@ class LocationTracker {
         processedCount++;
       }
 
-      console.log("[Background] Background sync completed - Success:", successCount, "Failed:", failureCount, "Remaining in storage:", locations.length);
+      console.log("[Background] Background sync completed - Success:", successCount, "Failed:", failureCount, "Remaining in storage:", locations.length, "on", Platform.OS);
     } catch (error) {
       console.error("[Background] Failed to sync locations:", error);
       throw error;
@@ -580,7 +586,7 @@ class LocationTracker {
         timestamp = new Date();
       }
 
-      console.log("[Tracking] Processing location update:", {
+      console.log("[Tracking] Processing location update (", Platform.OS, "):", {
         current: { lat, lon, time: timestamp.toISOString() },
         last: lastLocation,
         originalTime: time,
@@ -669,7 +675,7 @@ class LocationTracker {
       const storedLocations = await AsyncStorage.getItem(BACKGROUND_LOCATIONS_KEY);
       const locations = storedLocations ? JSON.parse(storedLocations) : [];
       
-      console.log("[Debug] Stored locations in AsyncStorage:", {
+      console.log("[Debug] Stored locations in AsyncStorage (", Platform.OS, "):", {
         count: locations.length,
         locations: locations.slice(0, 5), // Show first 5 locations
         totalStored: locations.length,
@@ -685,7 +691,7 @@ class LocationTracker {
   // Cleanup method
   async cleanup(): Promise<void> {
     try {
-      console.log("[Tracker] Cleaning up LocationTracker");
+      console.log("[Tracker] Cleaning up LocationTracker on", Platform.OS);
 
       // Stop tracking
       await this.stopTracking();
@@ -722,7 +728,7 @@ class LocationTracker {
         this.syncTimeout = null;
       }
 
-      console.log("[Tracker] LocationTracker cleanup completed");
+      console.log("[Tracker] LocationTracker cleanup completed on", Platform.OS);
     } catch (error) {
       console.error("[Tracker] Error during cleanup:", error);
     }
@@ -741,7 +747,7 @@ class LocationTracker {
   // Debug method for testing native module communication
   async testNativeCommunication(): Promise<void> {
     try {
-      console.log("[DEBUG] 🧪 Testing native module communication...");
+      console.log("[DEBUG] 🧪 Testing native module communication on", Platform.OS);
       
       // Test 1: Check if module exists
       console.log("[DEBUG] 🧪 Module exists:", !!NativeLocationModule);
@@ -765,7 +771,7 @@ class LocationTracker {
 
   // Debug method for checking event listeners
   debugEventListeners(): void {
-    console.log("[DEBUG] 📡 Event listener status:");
+    console.log("[DEBUG] 📡 Event listener status on", Platform.OS);
     console.log("[DEBUG]   - Location subscription:", !!this.locationSubscription);
     console.log("[DEBUG]   - Error subscription:", !!this.errorSubscription);
     console.log("[DEBUG]   - Permission subscription:", !!this.permissionSubscription);
@@ -779,7 +785,7 @@ class LocationTracker {
 
   // Comprehensive debug method
   async debugLocationTracking(): Promise<void> {
-    console.log("=== LOCATION TRACKING DEBUG ===");
+    console.log("=== LOCATION TRACKING DEBUG (", Platform.OS, ") ===");
     
     // Test 1: Native module availability
     await this.testNativeCommunication();
@@ -802,7 +808,7 @@ class LocationTracker {
       console.log("[DEBUG] 🔄 Is tracking:", this.isCurrentlyTracking);
     }, 10000);
     
-    console.log("=== DEBUG COMPLETE ===");
+    console.log("=== DEBUG COMPLETE (", Platform.OS, ") ===");
   }
 }
 

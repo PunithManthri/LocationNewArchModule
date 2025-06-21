@@ -1,4 +1,81 @@
-# Resolve react_native_pods.rb with node to allow for hoisting
+# # Resolve react_native_pods.rb with node to allow for hoisting
+# require Pod::Executable.execute_command('node', ['-p',
+#   'require.resolve(
+#     "react-native/scripts/react_native_pods.rb",
+#     {paths: [process.argv[1]]},
+#   )', __dir__]).strip
+
+# platform :ios, '16.0'
+# prepare_react_native_project!
+
+# linkage = ENV['USE_FRAMEWORKS']
+# if linkage != nil
+#   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+#   use_frameworks! :linkage => linkage.to_sym
+# end
+
+# $RNCodegenAsStaticFramework = true
+
+# target 'LocationNewArchModule' do
+#   config = use_native_modules!
+
+#   use_react_native!(
+#     :path => config[:reactNativePath],
+#     :app_path => "#{Pod::Config.instance.installation_root}/..",
+#     :fabric_enabled => true,
+#     :new_arch_enabled => true
+#   )
+
+#   post_install do |installer|
+#     react_native_post_install(
+#       installer,
+#       config[:reactNativePath],
+#       :mac_catalyst_enabled => false
+#     )
+    
+#     # Fix for header paths and bridging header
+#     installer.pods_project.targets.each do |target|
+#       target.build_configurations.each do |config|
+#         # 1. Header search paths
+#         config.build_settings['HEADER_SEARCH_PATHS'] = [
+#           '$(inherited)',
+#           '"${PODS_ROOT}/Headers/Public"',
+#           '"${PODS_ROOT}/Headers/Public/React-Core"',
+#           '"${PODS_ROOT}/Headers/Public/RCTDeprecation"',
+#           '"${PODS_ROOT}/Headers/Public/ReactCommon"',
+#           '"$(SRCROOT)/../node_modules/react-native/React"',
+#           '"$(SRCROOT)/../node_modules/react-native/ReactCommon"',
+#           '"$(SRCROOT)/../node_modules/react-native/React/CoreModules"'
+#         ]
+        
+#         # 2. Swift compatibility flags
+#         config.build_settings['OTHER_SWIFT_FLAGS'] ||= ['$(inherited)']
+#         config.build_settings['OTHER_SWIFT_FLAGS'].delete('-DRCT_ENABLE_INSPECTOR=1')
+#         config.build_settings['OTHER_SWIFT_FLAGS'] << '-DRCT_ENABLE_INSPECTOR'
+        
+#         # 3. Bridging header configuration
+#         if target.name == 'LocationNewArchModule'
+#           config.build_settings['SWIFT_OBJC_BRIDGING_HEADER'] = '$(PROJECT_DIR)/ios/LocationNewArchModule-Bridging-Header.h'
+#           config.build_settings['ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES'] = 'YES'
+#         end
+        
+#         # 4. GCC preprocessor definitions
+#         config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+#         config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'].delete('RCT_ENABLE_INSPECTOR=1')
+#         config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'RCT_ENABLE_INSPECTOR'
+#       end
+#     end
+    
+#     # Create necessary symlinks
+#     system('mkdir -p Pods/Headers/Public/React-Core/React')
+#     system('ln -sf ../../../RCTDeprecation/RCTDeprecation.h Pods/Headers/Public/React-Core/React/')
+    
+#     # Fix for New Architecture components
+#     system('mkdir -p Pods/Headers/Public/react-native/ReactCommon')
+#     system('ln -sf ../../../../react-native/ReactCommon Pods/Headers/Public/react-native/')
+#   end
+# end
+
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
     "react-native/scripts/react_native_pods.rb",
@@ -14,31 +91,57 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+$RNCodegenAsStaticFramework = true
+
 target 'LocationNewArchModule' do
   config = use_native_modules!
 
   use_react_native!(
     :path => config[:reactNativePath],
-    # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/..",
     :fabric_enabled => true,
     :new_arch_enabled => true
   )
 
   post_install do |installer|
-    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
       config[:reactNativePath],
-      :mac_catalyst_enabled => false,
-      # :ccache_enabled => true
+      :mac_catalyst_enabled => false
     )
-    # Add header search path for Swift
+    
+    # Fix for header paths and compiler flags
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
-        config.build_settings['HEADER_SEARCH_PATHS'] ||= '$(inherited)'
-        config.build_settings['HEADER_SEARCH_PATHS'] << ' $(SRCROOT)/../node_modules/react-native/ReactCommon'
+        # 1. Header search paths
+        config.build_settings['HEADER_SEARCH_PATHS'] = [
+          '$(inherited)',
+          '"${PODS_ROOT}/Headers/Public/React-Core"',
+          '"${PODS_ROOT}/Headers/Public"',
+          '"$(SRCROOT)/../../node_modules/react-native/React"',
+          '"$(SRCROOT)/../../node_modules/react-native/ReactCommon"'
+        ].join(' ')
+        
+        # 2. Fix Swift flags
+        if config.build_settings['OTHER_SWIFT_FLAGS']
+          config.build_settings['OTHER_SWIFT_FLAGS'] = config.build_settings['OTHER_SWIFT_FLAGS']
+            .reject { |flag| flag.to_s.include?('RCT_ENABLE_INSPECTOR') }
+          config.build_settings['OTHER_SWIFT_FLAGS'] << '-DRCT_ENABLE_INSPECTOR'
+        else
+          config.build_settings['OTHER_SWIFT_FLAGS'] = ['$(inherited)', '-DRCT_ENABLE_INSPECTOR']
+        end
+        
+        # 3. Fix GCC definitions
+        if config.build_settings['GCC_PREPROCESSOR_DEFINITIONS']
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = config.build_settings['GCC_PREPROCESSOR_DEFINITIONS']
+            .reject { |definition| definition.to_s.include?('RCT_ENABLE_INSPECTOR') }
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'RCT_ENABLE_INSPECTOR=1'
+        end
       end
     end
+    
+    # Create necessary symlinks
+    system('mkdir -p Pods/Headers/Public/React-Core/React')
+    system('ln -sf ../../../RCTDeprecation/RCTDeprecation.h Pods/Headers/Public/React-Core/React/')
   end
 end

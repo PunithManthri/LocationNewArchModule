@@ -40,16 +40,11 @@ export interface PermissionResult {
 
 export interface Spec extends TurboModule {
   // Location tracking methods
-  startLocationTracking(): Promise<{
-    status: string;
-    permission: string;
-    accuracy?: string;
-    message: string;
-  }>;
+  startLocationTracking(): Promise<boolean>;
   
   stopLocationTracking(): Promise<boolean>;
   
-  getLastLocation(): Promise<LocationData>;
+  getLastLocation(): Promise<LocationData | null>;
   
   // Permission methods
   requestLocationPermissions(): Promise<PermissionResult>;
@@ -61,6 +56,8 @@ export interface Spec extends TurboModule {
   // Event emitter methods
   addListener(eventName: string): void;
   removeListeners(count: number): void;
+
+  testMethod(): void;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('LocationModule'); 

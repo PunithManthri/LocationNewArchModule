@@ -15,8 +15,8 @@ import {
   Alert,
   Dimensions,
   Animated,
+  Platform,
 } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import LocationTracker, { LocationUpdate } from './src/NewArchitecture/LocationTracker';
 
 const { width } = Dimensions.get('window');
@@ -224,14 +224,14 @@ function App(): React.JSX.Element {
   };
 
   const backgroundStyle = {
-    backgroundColor: Colors.darker,
+    backgroundColor: "black",
   };
 
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
         barStyle="light-content"
-        backgroundColor={Colors.darker}
+        backgroundColor={'black'}
       />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
@@ -269,6 +269,13 @@ function App(): React.JSX.Element {
               />
               <Text style={styles.statusText}>
                 Idle Status: {isCurrentlyIdle ? 'Idle' : 'Active'}
+              </Text>
+            </View>
+
+            <View style={styles.statusRow}>
+              <View style={[styles.statusIndicator, { backgroundColor: '#9C27B0' }]} />
+              <Text style={styles.statusText}>
+                Platform: {Platform.OS.toUpperCase()}
               </Text>
             </View>
           </View>
@@ -376,12 +383,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: Colors.darker,
+    backgroundColor: 'black',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: Colors.white,
+    color: 'white',
     textAlign: 'center',
     marginBottom: 30,
   },
@@ -401,11 +408,11 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 16,
-    color: Colors.white,
+    color: 'white',
     flex: 1,
   },
   section: {
-    backgroundColor: Colors.dark,
+    backgroundColor: 'black',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
@@ -413,17 +420,17 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: Colors.white,
+    color: 'white',
     marginBottom: 10,
   },
   locationText: {
     fontSize: 14,
-    color: Colors.white,
+    color: 'white',
     marginBottom: 5,
   },
   idleText: {
     fontSize: 14,
-    color: Colors.white,
+    color: 'white',
     marginBottom: 5,
   },
   errorSection: {
@@ -435,12 +442,12 @@ const styles = StyleSheet.create({
   errorTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: Colors.white,
+    color: 'white',
     marginBottom: 5,
   },
   errorText: {
     fontSize: 14,
-    color: Colors.white,
+    color: 'white',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -463,7 +470,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: Colors.white,
+    color: 'white',
   },
 });
 

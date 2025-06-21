@@ -1,10 +1,9 @@
 import Foundation
 import CoreLocation
-import React
+import UIKit
 
-@objcMembers
-@objc(LocationModule)
-class LocationModule: RCTEventEmitter {
+@objc(LocationModuleImpl)
+class LocationModuleImpl: NSObject, NativeLocationModuleSpec {
     
     // MARK: - Advanced Constants (Adaptive and Intelligent)
     private struct Constants {
@@ -128,6 +127,9 @@ class LocationModule: RCTEventEmitter {
     // MARK: - Optimized Permission Handling
     private var pendingPermissionResolve: RCTPromiseResolveBlock? = nil
     private var pendingPermissionReject: RCTPromiseRejectBlock? = nil
+    
+    // MARK: - Event Emitter
+    private var eventEmitter: ((String, [String: Any]) -> Void)?
     
     // MARK: - Initialization
     @objc
@@ -334,63 +336,15 @@ class LocationModule: RCTEventEmitter {
         clearLocationData()
     }
 
-    override func supportedEvents() -> [String] {
-        return ["onLocationUpdate", "onLocationError", "onLocationPermissionChanged"]
-    }
-    
     // MARK: - New Architecture Module Registration
     @objc
     static func registerModule() {
         // This method ensures the module is properly registered in the new architecture
-        if LocationModule.DEBUG_MODE {
-            print("🔧 [\(LocationModule.TAG)] Module registration called")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("🔧 [\(LocationModuleImpl.TAG)] Module registration called")
         }
     }
     
-    // MARK: - RCTEventEmitter
-    override func startObserving() {
-        super.startObserving()
-        hasListeners = true
-        print("LocationModule: 👂 startObserving called, hasListeners: \(hasListeners)")
-    }
-
-    override func stopObserving() {
-        super.stopObserving()
-        hasListeners = false
-        print("LocationModule: 👂 stopObserving called, hasListeners: \(hasListeners)")
-        listenerCount.removeAll()
-    }
-
-    @objc
-    override func addListener(_ eventName: String) {
-        super.addListener(eventName)
-        listenerCount[eventName] = (listenerCount[eventName] ?? 0) + 1
-        hasListeners = true
-        print("LocationModule: 👂 addListener for \(eventName), count: \(listenerCount[eventName] ?? 0)")
-    }
-
-    @objc(removeLocationListeners:)
-    func removeLocationListeners(_ count: Int = 1) {
-        print("LocationModule: 👂 removeLocationListeners called with count: \(count)")
-        for (eventName, currentCount) in listenerCount {
-            let removeCount = min(count, currentCount)
-            if removeCount > 0 {
-                listenerCount[eventName] = currentCount - removeCount
-                if listenerCount[eventName] == 0 {
-                    listenerCount.removeValue(forKey: eventName)
-                }
-            }
-        }
-        hasListeners = !listenerCount.isEmpty
-        if let method = class_getInstanceMethod(RCTEventEmitter.self, Selector(("removeListeners:"))) {
-            typealias RemoveListenersFunc = @convention(c) (AnyObject, Selector, Int) -> Void
-            let implementation = method_getImplementation(method)
-            let removeListeners = unsafeBitCast(implementation, to: RemoveListenersFunc.self)
-            removeListeners(self, Selector(("removeListeners:")), count)
-        }
-        print("LocationModule: 👂 After removing listeners, hasListeners: \(hasListeners)")
-    }
-
     // MARK: - Optimized Location Manager Setup
     private func setupLocationManager() {
         print("LocationModule: ⚙️ Setting up advanced location manager")
@@ -470,8 +424,8 @@ class LocationModule: RCTEventEmitter {
     }
 
     // MARK: - Optimized Location Tracking
-    @objc
-    func startLocationTracking(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    @objc(startLocationTracking:reject:)
+    func startLocationTracking(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         print("LocationModule: 🚀 Starting optimized location tracking")
         // Reset error count on successful start
         errorCount = 0
@@ -484,14 +438,14 @@ class LocationModule: RCTEventEmitter {
             }
             isTracking = false
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.startTrackingWithChecks(resolve: resolve, rejecter: reject)
+                self.startTrackingWithChecks(resolve: resolve, reject: reject)
             }
             return
         }
-        startTrackingWithChecks(resolve: resolve, rejecter: reject)
+        startTrackingWithChecks(resolve: resolve, reject: reject)
     }
 
-    private func startTrackingWithChecks(resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    private func startTrackingWithChecks(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let locationManager = locationManager else {
             print("LocationModule: ❌ Location manager not initialized")
             reject("ERROR", "Location manager not initialized", nil)
@@ -559,8 +513,8 @@ class LocationModule: RCTEventEmitter {
         locationManager?.startMonitoringSignificantLocationChanges()
     }
 
-    @objc
-    func stopLocationTracking(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    @objc(stopLocationTracking:reject:)
+    func stopLocationTracking(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         print("LocationModule: 🛑 Stopping optimized location tracking")
         guard isTracking else {
             print("LocationModule: ⚠️ Not currently tracking, nothing to stop")
@@ -595,7 +549,7 @@ class LocationModule: RCTEventEmitter {
             print("LocationModule: 🧹 Cleaning up listeners")
             self.hasListeners = false
             self.listenerCount.removeAll()
-            self.removeLocationListeners(1)
+            self.removeListeners(1)
             // Clean up location manager
             print("LocationModule: 🔧 Resetting location manager")
             self.setupLocationManager()
@@ -689,19 +643,19 @@ class LocationModule: RCTEventEmitter {
               "isCurrentlyIdle: \(isCurrentlyIdle), " +
               "outsideVist_Total_IdleTime: \(outsideVist_Total_IdleTime), " +
               "isOutsideVisitTracking: \(isOutsideVisitTracking)")
-        sendEvent(withName: "onLocationUpdate", body: idleTimeDict)
+        eventEmitter?("onLocationUpdate", idleTimeDict)
     }
 
     // MARK: - React Native Methods
-    @objc(getLastLocation:rejecter:)
-    func getLastLocation(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-        if LocationModule.DEBUG_MODE {
-            print("📍 [\(LocationModule.TAG)] getLastLocation called")
+    @objc(getLastLocation:reject:)
+    func getLastLocation(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if LocationModuleImpl.DEBUG_MODE {
+            print("📍 [\(LocationModuleImpl.TAG)] getLastLocation called")
         }
         
         if let lastLocation = lastLocation {
-            if LocationModule.DEBUG_MODE {
-                print("📍 [\(LocationModule.TAG)] Found actual last location")
+            if LocationModuleImpl.DEBUG_MODE {
+                print("📍 [\(LocationModuleImpl.TAG)] Found actual last location")
             }
             
             let locationData: [String: Any] = [
@@ -725,15 +679,15 @@ class LocationModule: RCTEventEmitter {
             
             resolve(locationData)
         } else {
-            if LocationModule.DEBUG_MODE {
-                print("⚠️ [\(LocationModule.TAG)] No last location available, returning null")
+            if LocationModuleImpl.DEBUG_MODE {
+                print("⚠️ [\(LocationModuleImpl.TAG)] No last location available, returning null")
             }
             resolve(nil)
         }
     }
     
-    @objc
-    func requestLocationPermissions(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    @objc(requestLocationPermissions:reject:)
+    func requestLocationPermissions(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let locationManager = locationManager else {
             print("LocationModule: ❌ Location manager not initialized")
             reject("ERROR", "Location manager not initialized", nil)
@@ -803,8 +757,8 @@ class LocationModule: RCTEventEmitter {
         resolve(["status": "authorizedWhenInUse", "message": "Location permission granted for when in use"])
     }
 
-    @objc(checkAccuracyAuthorization:rejecter:)
-    func checkAccuracyAuthorization(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    @objc(checkAccuracyAuthorization:reject:)
+    func checkAccuracyAuthorization(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if #available(iOS 14.0, *) {
             guard let locationManager = locationManager else {
                 reject("ERROR", "Location manager not initialized", nil)
@@ -829,8 +783,8 @@ class LocationModule: RCTEventEmitter {
         }
     }
     
-    @objc(requestAccuracyAuthorization:rejecter:)
-    func requestAccuracyAuthorization(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    @objc(requestAccuracyAuthorization:reject:)
+    func requestAccuracyAuthorization(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if #available(iOS 14.0, *) {
             guard let locationManager = locationManager else {
                 reject("ERROR", "Location manager not initialized", nil)
@@ -859,8 +813,8 @@ class LocationModule: RCTEventEmitter {
     
     // MARK: - Location Processing
     private func processLocationUpdate(_ location: CLLocation, currentTime: TimeInterval) {
-        if LocationModule.DEBUG_MODE {
-            print("🔄 [\(LocationModule.TAG)] processLocationUpdate called with: \(location) at \(currentTime)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("🔄 [\(LocationModuleImpl.TAG)] processLocationUpdate called with: \(location) at \(currentTime)")
         }
         
         do {
@@ -868,7 +822,7 @@ class LocationModule: RCTEventEmitter {
             let timeSinceLastUpdate = currentTime - lastUpdateTime
             let shouldForceUpdate = timeSinceLastUpdate >= Constants.FORCE_UPDATE_INTERVAL_MS / 1000
             
-            if LocationModule.DEBUG_MODE {
+            if LocationModuleImpl.DEBUG_MODE {
                 print("⏰ Time Analysis:")
                 print("   📅 Current Time: \(currentTime)")
                 print("   📅 Last Update Time: \(lastUpdateTime)")
@@ -881,7 +835,7 @@ class LocationModule: RCTEventEmitter {
                 let currentDisplacement = lastLocation.distance(from: location)
                 let totalDisplacement = totalDisplacementSinceLastUpdate + currentDisplacement
                 
-                if LocationModule.DEBUG_MODE {
+                if LocationModuleImpl.DEBUG_MODE {
                     print("📏 Distance Analysis:")
                     print("   📍 Current Displacement: \(currentDisplacement)m")
                     print("   📏 Total Displacement: \(totalDisplacement)m")
@@ -892,14 +846,14 @@ class LocationModule: RCTEventEmitter {
                 let isBelowThreshold = totalDisplacement < Constants.MIN_DISTANCE_FOR_UPDATE
                 let isStationary = currentDisplacement < 1.0
                 
-                if LocationModule.DEBUG_MODE {
+                if LocationModuleImpl.DEBUG_MODE {
                     print("🚶 Movement Analysis:")
                     print("   🛑 Is Below Threshold: \(isBelowThreshold)")
                     print("   🛑 Is Stationary: \(isStationary)")
                 }
                 
                 if isBelowThreshold && !shouldForceUpdate {
-                    if LocationModule.DEBUG_MODE {
+                    if LocationModuleImpl.DEBUG_MODE {
                         print("⏭️ SKIPPING LOCATION UPDATE - Stationary/Insufficient Movement")
                         print("   📊 Reason: Total displacement (\(totalDisplacement)m) < threshold (\(Constants.MIN_DISTANCE_FOR_UPDATE)m)")
                         print("   ⏰ Time since last update: \(timeSinceLastUpdate)s")
@@ -914,7 +868,7 @@ class LocationModule: RCTEventEmitter {
                 }
                 
                 if isStationary {
-                    if LocationModule.DEBUG_MODE {
+                    if LocationModuleImpl.DEBUG_MODE {
                         print("🛑 STATIONARY DETECTED - Minimal Movement")
                         print("   📏 Current Displacement: \(currentDisplacement)m")
                         print("   🎯 Stationary Threshold: 1.0m")
@@ -924,12 +878,12 @@ class LocationModule: RCTEventEmitter {
                 
                 totalDisplacementSinceLastUpdate = totalDisplacement
             } else {
-                if LocationModule.DEBUG_MODE {
+                if LocationModuleImpl.DEBUG_MODE {
                     print("🆕 First Location Update - No Previous Location")
                 }
             }
             
-            if LocationModule.DEBUG_MODE {
+            if LocationModuleImpl.DEBUG_MODE {
                 print("✅ PROCEEDING WITH LOCATION UPDATE")
             }
             
@@ -941,7 +895,7 @@ class LocationModule: RCTEventEmitter {
             lastKnownLocation = location
             
         } catch {
-            if LocationModule.DEBUG_MODE {
+            if LocationModuleImpl.DEBUG_MODE {
                 print("❌ Error processing location update: \(error)")
             }
             handleLocationError(error)
@@ -949,8 +903,8 @@ class LocationModule: RCTEventEmitter {
     }
     
     private func handleFirstLocation(_ location: CLLocation, currentTime: TimeInterval) {
-        if LocationModule.DEBUG_MODE {
-            print("🆕 [\(LocationModule.TAG)] handleFirstLocation called with: \(location) at \(currentTime)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("🆕 [\(LocationModuleImpl.TAG)] handleFirstLocation called with: \(location) at \(currentTime)")
         }
         
         preferredProvider = location.timestamp.description
@@ -964,22 +918,22 @@ class LocationModule: RCTEventEmitter {
         
         isServiceReady = true
         
-        if LocationModule.DEBUG_MODE {
-            print("✅ [\(LocationModule.TAG)] First location handled successfully")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("✅ [\(LocationModuleImpl.TAG)] First location handled successfully")
         }
     }
     
     // MARK: - Idle Time Tracking
     private func updateIdleTimeTracking(currentTime: TimeInterval, isBelowThreshold: Bool) {
-        if LocationModule.DEBUG_MODE {
-            print("⏱️ [\(LocationModule.TAG)] updateIdleTimeTracking called with currentTime: \(currentTime), isBelowThreshold: \(isBelowThreshold)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("⏱️ [\(LocationModuleImpl.TAG)] updateIdleTimeTracking called with currentTime: \(currentTime), isBelowThreshold: \(isBelowThreshold)")
         }
         
         if isBelowThreshold {
             if !isCurrentlyIdle {
                 idleStartTime = currentTime
                 isCurrentlyIdle = true
-                if LocationModule.DEBUG_MODE {
+                if LocationModuleImpl.DEBUG_MODE {
                     print("🕐 Starting idle period at: \(currentTime)")
                 }
             }
@@ -987,7 +941,7 @@ class LocationModule: RCTEventEmitter {
             let ongoingIdleDuration = currentTime - idleStartTime
             totalIdleTimeBelowThreshold += ongoingIdleDuration
             
-            if LocationModule.DEBUG_MODE {
+            if LocationModuleImpl.DEBUG_MODE {
                 print("⏱️ Idle Time Tracking Update:")
                 print("   🕐 Ongoing Idle Duration: \(ongoingIdleDuration)s")
                 print("   📊 Total Idle Time Below Threshold: \(totalIdleTimeBelowThreshold)s")
@@ -996,7 +950,7 @@ class LocationModule: RCTEventEmitter {
             
             if isOutsideVisitTracking {
                 outsideVist_Total_IdleTime += ongoingIdleDuration
-                if LocationModule.DEBUG_MODE {
+                if LocationModuleImpl.DEBUG_MODE {
                     print("🏠 Outside Visit Idle Time Updated:")
                     print("   🕐 Outside Visit Total Idle: \(outsideVist_Total_IdleTime)s")
                 }
@@ -1008,7 +962,7 @@ class LocationModule: RCTEventEmitter {
                 let idleEndDuration = currentTime - idleStartTime
                 totalIdleTimeBelowThreshold += idleEndDuration
                 
-                if LocationModule.DEBUG_MODE {
+                if LocationModuleImpl.DEBUG_MODE {
                     print("✅ Ending idle period:")
                     print("   🕐 Final Idle Duration: \(idleEndDuration)s")
                     print("   📊 Total Idle Time Below Threshold: \(totalIdleTimeBelowThreshold)s")
@@ -1016,7 +970,7 @@ class LocationModule: RCTEventEmitter {
                 
                 if isOutsideVisitTracking {
                     outsideVist_Total_IdleTime += idleEndDuration
-                    if LocationModule.DEBUG_MODE {
+                    if LocationModuleImpl.DEBUG_MODE {
                         print("🏠 Outside Visit Idle Time Final Update:")
                         print("   🕐 Outside Visit Total Idle: \(outsideVist_Total_IdleTime)s")
                     }
@@ -1029,8 +983,8 @@ class LocationModule: RCTEventEmitter {
     }
     
     private func sendIdleTimeOnlyUpdate(location: CLLocation, currentTime: TimeInterval) {
-        if LocationModule.DEBUG_MODE {
-            print("🚀 [\(LocationModule.TAG)] sendIdleTimeOnlyUpdate called with location: \(location) at \(currentTime)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("🚀 [\(LocationModuleImpl.TAG)] sendIdleTimeOnlyUpdate called with location: \(location) at \(currentTime)")
             print("📋 REASON: Location update skipped due to stationary/insufficient movement")
         }
         
@@ -1052,7 +1006,7 @@ class LocationModule: RCTEventEmitter {
             "minDistanceForUpdate": Constants.MIN_DISTANCE_FOR_UPDATE
         ]
         
-        if LocationModule.DEBUG_MODE {
+        if LocationModuleImpl.DEBUG_MODE {
             print("📤 Sending Idle Time Data to React Native (Location Skipped):")
             print("   📍 Location: (\(idleTimeData["latitude"] as! Double), \(idleTimeData["longitude"] as! Double))")
             print("   🎯 Accuracy: \(idleTimeData["accuracy"] as! Double)")
@@ -1070,17 +1024,17 @@ class LocationModule: RCTEventEmitter {
             print("   🎯 Min Distance Threshold: \(idleTimeData["minDistanceForUpdate"] as! Double)m")
         }
         
-        sendLocationToReactNative(locationData: idleTimeData, isFirstLocation: false)
+        eventEmitter?("onLocationUpdate", idleTimeData)
         
-        if LocationModule.DEBUG_MODE {
+        if LocationModuleImpl.DEBUG_MODE {
             print("✅ Idle time data sent to React Native successfully! (Location update skipped)")
         }
     }
     
     // MARK: - React Native Communication
     private func sendLocationToReactNative(location: CLLocation, currentTime: TimeInterval, isFirstLocation: Bool) {
-        if LocationModule.DEBUG_MODE {
-            print("📡 [\(LocationModule.TAG)] sendLocationToReactNative called with location: \(location) at \(currentTime), isFirstLocation: \(isFirstLocation)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("📡 [\(LocationModuleImpl.TAG)] sendLocationToReactNative called with location: \(location) at \(currentTime), isFirstLocation: \(isFirstLocation)")
             print("📍 Sending LOCATION DATA to React Native")
             print("   📍 Coordinates: (\(location.coordinate.latitude), \(location.coordinate.longitude))")
             print("   🎯 Accuracy: \(location.horizontalAccuracy)m")
@@ -1108,16 +1062,16 @@ class LocationModule: RCTEventEmitter {
             "isOutsideVisitTracking": isOutsideVisitTracking
         ]
         
-        sendEvent(withName: "onLocationUpdate", body: locationData)
+        eventEmitter?("onLocationUpdate", locationData)
         
-        if LocationModule.DEBUG_MODE {
+        if LocationModuleImpl.DEBUG_MODE {
             print("✅ Location data sent to React Native via event system")
         }
     }
     
     private func sendLocationToReactNative(locationData: [String: Any], isFirstLocation: Bool) {
-        if LocationModule.DEBUG_MODE {
-            print("📡 [\(LocationModule.TAG)] sendLocationToReactNative called with locationData, isFirstLocation: \(isFirstLocation)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("📡 [\(LocationModuleImpl.TAG)] sendLocationToReactNative called with locationData, isFirstLocation: \(isFirstLocation)")
             
             let isIdleTimeData = locationData["type"] as? String == "idle_time_only"
             
@@ -1136,17 +1090,17 @@ class LocationModule: RCTEventEmitter {
             }
         }
         
-        sendEvent(withName: "onLocationUpdate", body: locationData)
+        eventEmitter?("onLocationUpdate", locationData)
         
-        if LocationModule.DEBUG_MODE {
+        if LocationModuleImpl.DEBUG_MODE {
             print("✅ Data sent to React Native via event system")
         }
     }
     
     // MARK: - Error Handling
     private func handleLocationError(_ error: Error) {
-        if LocationModule.DEBUG_MODE {
-            print("❌ [\(LocationModule.TAG)] handleLocationError called: \(error)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("❌ [\(LocationModuleImpl.TAG)] handleLocationError called: \(error)")
         }
         
         lastErrorTime = Date().timeIntervalSince1970
@@ -1159,13 +1113,13 @@ class LocationModule: RCTEventEmitter {
             "errorCount": errorCount
         ]
         
-        sendEvent(withName: "onLocationError", body: errorData)
+        eventEmitter?("onLocationError", errorData)
     }
     
     // MARK: - Performance Monitoring
     private func updatePerformanceMetrics(location: CLLocation, processingTime: TimeInterval) {
-        if LocationModule.DEBUG_MODE {
-            print("📊 [\(LocationModule.TAG)] updatePerformanceMetrics called with: \(location), processingTime: \(processingTime)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("📊 [\(LocationModuleImpl.TAG)] updatePerformanceMetrics called with: \(location), processingTime: \(processingTime)")
         }
         
         totalLocationsProcessed += 1
@@ -1190,17 +1144,14 @@ class LocationModule: RCTEventEmitter {
     }
     
     // MARK: - Cleanup
-    override func invalidate() {
-        if LocationModule.DEBUG_MODE {
-            print("🧹 [\(LocationModule.TAG)] invalidate called")
+    func invalidate() {
+        if LocationModuleImpl.DEBUG_MODE {
+            print("🧹 [\(LocationModuleImpl.TAG)] invalidate called")
         }
-        
         locationManager?.stopUpdatingLocation()
         locationManager = nil
         isTracking = false
         isServiceReady = false
-        
-        super.invalidate()
     }
 
     // MARK: - Persistence methods for outside visit data
@@ -1235,21 +1186,35 @@ class LocationModule: RCTEventEmitter {
         saveOutsideVisitData()
         print("LocationModule: 🏠 [IdleTime] Updated outside visit idle time: \(outsideVist_Total_IdleTime)ms (\(outsideVist_Total_IdleTime/60000) minutes)")
     }
+
+    // MARK: - Event Emitter
+    func setEventEmitter(_ eventEmitter: @escaping (String, [String: Any]) -> Void) {
+        self.eventEmitter = eventEmitter
+    }
+
+    @objc(removeListeners:)
+    func removeListeners(_ count: Double) {
+        // Implement listener removal logic here, or leave empty if not needed
+        // For now, just print for debug
+        if LocationModuleImpl.DEBUG_MODE {
+            print("[LocationModuleImpl] removeListeners called with count: \(count)")
+        }
+    }
 }
 
 // MARK: - CLLocationManagerDelegate
-extension LocationModule: CLLocationManagerDelegate {
+extension LocationModuleImpl: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
-            if LocationModule.DEBUG_MODE {
-                print("⚠️ [\(LocationModule.TAG)] No valid location in update")
+            if LocationModuleImpl.DEBUG_MODE {
+                print("⚠️ [\(LocationModuleImpl.TAG)] No valid location in update")
             }
             return
         }
         
-        if LocationModule.DEBUG_MODE {
-            print("📍 [\(LocationModule.TAG)] Location update received: \(location)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("📍 [\(LocationModuleImpl.TAG)] Location update received: \(location)")
         }
         
         let currentTime = Date().timeIntervalSince1970
@@ -1262,8 +1227,8 @@ extension LocationModule: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        if LocationModule.DEBUG_MODE {
-            print("❌ [\(LocationModule.TAG)] Location manager failed with error: \(error)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("❌ [\(LocationModuleImpl.TAG)] Location manager failed with error: \(error)")
         }
         handleLocationError(error)
     }
@@ -1304,13 +1269,13 @@ extension LocationModule: CLLocationManagerDelegate {
             "status": status.rawValue,
             "message": "Authorization status changed"
         ]
-        sendEvent(withName: "onLocationPermissionChanged", body: permissionData)
+        eventEmitter?("onLocationPermissionChanged", permissionData)
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         let status = manager.authorizationStatus
-        if LocationModule.DEBUG_MODE {
-            print("🔐 [\(LocationModule.TAG)] Authorization status changed (iOS 14+): \(status.rawValue)")
+        if LocationModuleImpl.DEBUG_MODE {
+            print("🔐 [\(LocationModuleImpl.TAG)] Authorization status changed (iOS 14+): \(status.rawValue)")
         }
         
         let permissionData: [String: Any] = [
@@ -1320,6 +1285,6 @@ extension LocationModule: CLLocationManagerDelegate {
             "message": "Authorization status changed"
         ]
         
-        sendEvent(withName: "onLocationPermissionChanged", body: permissionData)
+        eventEmitter?("onLocationPermissionChanged", permissionData)
     }
 } 
